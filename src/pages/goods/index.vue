@@ -37,7 +37,7 @@
               </text>
             </uni-col>
           </view>
-          <uni-popup ref="popup" type="bottom" :safe-area="false">
+          <uni-popup ref="popup" type="bottom" :safe-area="true" background-color="#FFFFFF">
             <view class="popup-selected-spec">
               <view class="goods-item">
                 <image class="goods-mini-img" :src="selectedGoodsItem.img"/>
@@ -68,7 +68,7 @@
               </uni-section>
             </view>
             <view class="popup-bottom-button">
-              <view class="add-to-cart" type="primary">
+              <view class="add-to-cart">
                 <text>加入购物车</text>
               </view>
               <view class="buy-now">
@@ -77,9 +77,21 @@
             </view>
           </uni-popup>
         </view>
-
       </uni-row>
+    </view>
 
+    <view class="shop-info">
+      <view class="shop-logo-box">
+        <image class="shop-logo" src="/static/img/logo/logo.png"/>
+      </view>
+      <view class="shop-desc">
+        <view class="shop-name">
+          <text>Apple官方旗舰店</text>
+        </view>
+      </view>
+      <view class="shop-enter-button">
+        <text>进店逛逛</text>
+      </view>
     </view>
 
 
@@ -285,7 +297,7 @@ const changeBuyNum = (value: number) => {
 
     .popup-selected-spec {
       height: 800rpx;
-      background-color: #FFFFFF;
+      //background-color: #FFFFFF;
 
       .goods-item {
         padding: 40rpx;
@@ -324,15 +336,14 @@ const changeBuyNum = (value: number) => {
       }
     }
     .popup-bottom-button {
-      height: 100rpx;
-      //position: relative;
+      height: 80rpx;
       display: flex;
       flex: 1;
-      
       color: rgb(255, 255, 255);
       .add-to-cart {
-        //width: 200rpx;
-        //height: 100rpx;
+        display: flex;
+        flex: 1;
+        margin: 0 30rpx 0 50rpx;
         justify-content: center;
         align-items: center;
         overflow: hidden;
@@ -340,8 +351,9 @@ const changeBuyNum = (value: number) => {
         background: linear-gradient(90deg, rgb(255, 205, 30), rgb(255, 138, 24));
       }
       .buy-now {
-        //width: 200rpx;
-        //height: 100rpx;
+        display: flex;
+        flex: 1;
+        margin: 0 50rpx 0 30rpx;
         justify-content: center;
         align-items: center;
         overflow: hidden;
@@ -350,6 +362,48 @@ const changeBuyNum = (value: number) => {
       }
 
     }
+  }
+
+  .shop-info {
+    height: 160rpx;
+    background-color: #FFFFFF;
+    margin-top: 20rpx;
+    border-radius: 30rpx;
+    display: flex;
+    .shop-logo-box {
+      padding: 30rpx;
+      height: 100rpx;
+      width: 100rpx;
+      border-radius: 10rpx;
+      overflow: hidden;
+      .shop-logo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .shop-desc {
+      flex: 1;
+      .shop-name {
+        font-weight: bold;
+        font-family: 'Helvetica Neue', Helvetica, sans-serif;
+        line-height: 160rpx;
+      }
+
+    }
+    .shop-enter-button {
+      line-height: 160rpx;
+      padding-right: 30rpx;
+      text {
+        color: rgb(255, 138, 24);
+        font-size: 24rpx;
+        padding: 5rpx 15rpx;
+        border: 1rpx solid rgb(254, 96, 53);
+        border-radius: 10rpx;
+      }
+    }
+
   }
 
   .bottom-bar {

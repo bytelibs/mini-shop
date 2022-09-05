@@ -103,19 +103,19 @@ const gridList = ref([
 const goodsList = ref([
   {
     id: 1,
-    img: '/static/logo.png',
+    img: '/static/img/goods/goods_1.jpg',
     title: 'Iphone 13 Pro Max 256G 全网通 国行正品',
     price: '5000.00',
     sales: 1000
   }, {
     id: 2,
-    img: '/static/logo.png',
+    img: '/static/img/goods/goods_2.jpg',
     title: 'Iphone 13 Pro Max',
     price: '5000.00',
     sales: 1000
   }, {
     id: 3,
-    img: '/static/logo.png',
+    img: '/static/img/goods/goods_3.jpg',
     title: 'Iphone 13 Pro Max',
     price: '5000.00',
     sales: 1000
@@ -158,15 +158,17 @@ const viewGoods = (row: GoodsItem) => {
 .goods-item {
   width: auto;
   height: 450rpx;
-  background-color: #c0c0c0;
+  background-color: #FFFFFF;
   margin: 5rpx;
-  border-radius: 20rpx;
+  //border: 1rpx solid #FFFFFF;
+  border-radius: 25rpx;
+  overflow: hidden;
   .goods-img {
     width: 100%;
     height: 350rpx;
   }
   .goods-infos {
-    margin: auto 10rpx;
+    margin: 6rpx 10rpx;
     .goods-title {
       font-size: 16px;
       font-family: arial,sans-serif;

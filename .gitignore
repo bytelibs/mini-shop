@@ -12,3 +12,10 @@ $RECYCLE.BIN/
 
 # Node.js
 node_modules/
+
+dist
+.git
+.hbuilderx
+
+pnpm-lock.yaml
+

@@ -77,13 +77,13 @@ const duration = ref(1500);
 const bannerList = ref([
   {
     id: 1,
-    img: '/static/img/banner1.jpg'
+    img: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/banner/banner1.jpg'
   }, {
     id: 2,
-    img: '/static/img/banner2.jpg'
+    img: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/banner/banner2.jpg'
   }, {
     id: 3,
-    img: '/static/img/banner3.jpg'
+    img: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/banner/banner3.jpg'
   }
 ])
 
@@ -103,19 +103,19 @@ const gridList = ref([
 const goodsList = ref([
   {
     id: 1,
-    img: '/static/img/goods/goods_1.jpg',
+    img: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
     title: 'Iphone 13 Pro Max 256G 全网通 国行正品',
     price: '5000.00',
     sales: 1000
   }, {
     id: 2,
-    img: '/static/img/goods/goods_2.jpg',
+    img: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_2.jpg',
     title: 'Iphone 13 Pro Max',
     price: '5000.00',
     sales: 1000
   }, {
     id: 3,
-    img: '/static/img/goods/goods_3.jpg',
+    img: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_3.jpg',
     title: 'Iphone 13 Pro Max',
     price: '5000.00',
     sales: 1000

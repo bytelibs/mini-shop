@@ -31,9 +31,9 @@
         <view>
           <view @click="openPopup">
             <uni-col :span="24">
-              <text>选择：</text>
-              <text v-if="selectedGoodsItem.specName">
-                {{selectedGoodsItem.specName}} * {{selectedGoodsItem.num}}
+              <text v-if="!selectedGoodsItem.specName">选择规格</text>
+              <text v-else>
+                已选：{{selectedGoodsItem.specName}} * {{selectedGoodsItem.num}}
               </text>
             </uni-col>
           </view>
@@ -82,7 +82,7 @@
 
     <view class="shop-info">
       <view class="shop-logo-box">
-        <image class="shop-logo" src="/static/img/logo/logo.png"/>
+        <image class="shop-logo" src="https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/logo/logo.png"/>
       </view>
       <view class="shop-desc">
         <view class="shop-name">
@@ -93,6 +93,25 @@
         <text>进店逛逛</text>
       </view>
     </view>
+
+    <view class="goods-intro">
+<!--      <scroll-view scroll-y="{{true}}" style="width:100%;height:{{sysheight}}px;">-->
+<!--        <view class="img-size">-->
+<!--          <image src="/static/img/goods/detail.png" mode="widthFix" class="liucheng-img"></image>-->
+<!--        </view>-->
+<!--      </scroll-view>-->
+      <uni-segmented-control :current="current" :values="tabButtons" @clickItem="onClickItem" styleType="text" activeColor="#e43d33"></uni-segmented-control>
+      <view class="content">
+        <view v-show="current === 0">
+          <image class="goods-detail-image" src="https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/detail.png" mode="widthFix"/>
+        </view>
+        <view v-show="current === 1">
+          选项卡2的内容
+        </view>
+      </view>
+    </view>
+
+
 
 
     <view class="bottom-bar">
@@ -107,6 +126,8 @@ import {ref} from "vue";
 
 const indicatorDots = ref(true);
 const popup = ref();
+const tabButtons = ref(['详情','评论'])
+let current = ref(0)
 
 const goodsInfo = ref({
   id: 1,
@@ -116,29 +137,29 @@ const goodsInfo = ref({
   imgList: [
     {
       id: 1,
-      img: `/static/img/goods/goods_1.jpg`
+      img: `https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg`
     }, {
       id: 2,
-      img: '/static/img/goods/goods_2.jpg'
+      img: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_2.jpg'
     }, {
       id: 3,
-      img: '/static/img/goods/goods_3.jpg'
+      img: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_3.jpg'
     }
   ],
   spec: [
     {
       value: 1,
-      img: '/static/img/goods/goods_1.jpg',
+      img: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
       text: '石墨色',
       price: '5000.00'
     }, {
       value: 2,
-      img: '/static/img/goods/goods_2.jpg',
+      img: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_2.jpg',
       text: '远峰蓝',
       price: '5100.00'
     }, {
       value: 3,
-      img: '/static/img/goods/goods_3.jpg',
+      img: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_3.jpg',
       text: '银色',
       price: '5099.00'
     }
@@ -223,6 +244,11 @@ const changeBuyNum = (value: number) => {
   selectedGoodsItem.value.num = value
 }
 
+const onClickItem = (e: any) => {
+  if (current.value != e.currentIndex) {
+    current.value = e.currentIndex;
+  }
+}
 
 </script>
 
@@ -405,14 +431,36 @@ const changeBuyNum = (value: number) => {
     }
 
   }
+  .goods-intro {
+    //height: 160rpx;
+    background-color: #FFFFFF;
+    margin-top: 20rpx;
+    border-radius: 30rpx;
+
+    .content {
+      margin-top: 30rpx;
+
+
+      .goods-detail-image {
+        height: 100%;
+        width: 100%;
+        margin-bottom: calc(100rpx + env(safe-area-inset-bottom)) ;
+        overflow: hidden;
+
+      }
+    }
+  }
 
   .bottom-bar {
     display: flex;
     flex-direction: column;
-    bottom: 35rpx;
     position: fixed;
     left: var(--window-left);
     right: var(--window-right);
+    bottom: 0;
+    padding-bottom: constant(safe-area-inset-bottom);
+    background-color: #FFFFFF;
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
 

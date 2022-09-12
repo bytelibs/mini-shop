@@ -68,11 +68,11 @@
               </uni-section>
             </view>
             <view class="popup-bottom-button">
-              <view class="add-to-cart">
-                <text>加入购物车</text>
+              <view v-if="showPopupButton === 0" class="add-to-cart">
+                <text>确定</text>
               </view>
-              <view class="buy-now">
-                <text>立即购买</text>
+              <view v-else class="buy-now">
+                <text>购买</text>
               </view>
             </view>
           </uni-popup>
@@ -202,18 +202,46 @@ const buttonGroup = ref([
 ]);
 
 const onClick = (e: any) => {
-  goodsInfo.value.star = !goodsInfo.value.star
-  e.content.icon = goodsInfo.value.star ? 'star-filled' : 'star'
-  let text = ''
-  text = goodsInfo.value.star ? '已收藏' : '已取消收藏'
-  uni.showToast({
-    title: text,
-    icon: "none"
-  })
+  if (e.index === 0) {
+    console.log('客服')
+  }
+  if (e.index === 1) {
+    console.log('店铺')
+  }
+  if (e.index === 2) {
+    console.log('收藏')
+    goodsInfo.value.star = !goodsInfo.value.star
+    e.content.icon = goodsInfo.value.star ? 'star-filled' : 'star'
+    let text = ''
+    text = goodsInfo.value.star ? '已收藏' : '已取消收藏'
+    uni.showToast({
+      title: text,
+      icon: "none"
+    })
+  }
+
+}
+
+/**
+ * popup中按钮展示状态
+ */
+const showPopupButton = ref(0)
+
+const buttonClick = (e: any) => {
+
+  if (e.index === 0) {
+    console.log('加入购物车')
+    showPopupButton.value = 0
+  }
+  if (e.index === 1) {
+    console.log('立即购买')
+    showPopupButton.value = 1
+  }
+  openPopup()
 }
 
 const openPopup = () => {
-  console.log('打开popup')
+  console.log('打开popup', popup)
   popup.value.open('bottom')
 
   resetSelected()

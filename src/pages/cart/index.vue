@@ -22,7 +22,7 @@
                 <view class="item-checkbox">
                   <checkbox-group @change="selected(goodsItem, item)">
                     <label>
-                      <checkbox class="item-select" color="#555555" :checked="goodsItem.checked"/>
+                      <checkbox class="item-select" :checked="goodsItem.checked"/>
                     </label>
                   </checkbox-group>
                 </view>

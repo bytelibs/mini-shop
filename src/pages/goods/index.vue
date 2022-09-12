@@ -103,16 +103,13 @@
       <uni-segmented-control :current="current" :values="tabButtons" @clickItem="onClickItem" styleType="text" activeColor="#e43d33"></uni-segmented-control>
       <view class="content">
         <view v-show="current === 0">
-          <image class="goods-detail-image" src="https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/detail.png" mode="widthFix"/>
+          <rich-text :nodes="goodsInfo.detail" />
         </view>
         <view v-show="current === 1">
           选项卡2的内容
         </view>
       </view>
     </view>
-
-
-
 
     <view class="bottom-bar">
       <uni-goods-nav :fill="true" :options="options" :button-group="buttonGroup" @click="onClick"
@@ -134,6 +131,7 @@ const goodsInfo = ref({
   title: 'Iphone 13 Pro Max 256G 全网通 国行正品',
   price: '5000.00',
   star: true,
+  detail: '<img style="max-width: 100%; height: auto" src="https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/detail.png" mode="widthFix"/>',
   imgList: [
     {
       id: 1,
@@ -439,15 +437,8 @@ const onClickItem = (e: any) => {
 
     .content {
       margin-top: 30rpx;
-
-
-      .goods-detail-image {
-        height: 100%;
-        width: 100%;
-        margin-bottom: calc(100rpx + env(safe-area-inset-bottom)) ;
-        overflow: hidden;
-
-      }
+      margin-bottom: calc(100rpx + env(safe-area-inset-bottom));
+      display: inline-block;
     }
   }
 

@@ -17,7 +17,7 @@ page {
   /*margin-bottom: 40px;*/
   background-color: #F6F6F6;
   /*background-color: #FFFFFF;*/
-  bottom: 0;
+  /*bottom: 0;*/
   /*padding-bottom: env(safe-area-inset-bottom);*/
 }
 </style>

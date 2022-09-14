@@ -68,10 +68,10 @@
               </uni-section>
             </view>
             <view class="popup-bottom-button">
-              <view v-if="showPopupButton === 0" class="add-to-cart">
+              <view v-if="showPopupButton === 0" class="add-to-cart" @click="addToCart">
                 <text>确定</text>
               </view>
-              <view v-else class="buy-now">
+              <view v-else class="buy-now" @click="buyNow">
                 <text>购买</text>
               </view>
             </view>
@@ -120,6 +120,7 @@
 
 <script lang="ts" setup>
 import {ref} from "vue";
+import {GoodsItem} from "@/types/goods";
 
 const indicatorDots = ref(true);
 const popup = ref();
@@ -248,12 +249,21 @@ const openPopup = () => {
 
 }
 
+const addToCart = () => {
+  console.log('添加至购物车', selectedGoodsItem.value)
+}
+
+const buyNow = () => {
+  console.log('立即购买', selectedGoodsItem.value)
+}
+
 const resetSelected = () => {
-  selectedGoodsItem.value.img = goodsInfo.value.imgList[0].img
-  selectedGoodsItem.value.price = goodsInfo.value.price
-  selectedGoodsItem.value.specName = ''
-  selectedGoodsItem.value.num = 1
-  radioValue.value = ''
+  selectedGoodsItem.value.id = goodsInfo.value.id;
+  selectedGoodsItem.value.img = goodsInfo.value.imgList[0].img;
+  selectedGoodsItem.value.price = goodsInfo.value.price;
+  selectedGoodsItem.value.specName = '';
+  selectedGoodsItem.value.num = 1;
+  radioValue.value = '';
 }
 
 const changeColor = (e: any) => {

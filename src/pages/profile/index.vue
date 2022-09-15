@@ -12,9 +12,9 @@
     <view class="order-center">
       <uni-section title="我的订单" type="line" padding>
         <template v-slot:right>
-          <view class="order-more">全部</view>
+          <view class="order-more" @click="showAllOrder">全部</view>
         </template>
-        <uni-grid :column="5" :show-border="false" :square="false" @change="change">
+        <uni-grid :column="5" :show-border="false" :square="false" @change="orderChange">
           <uni-grid-item v-for="(item ,index) in orderBtnList" :index="index" :key="index">
             <view class="grid-item-box">
               <image class="image" :src="item.url" mode="aspectFill" />
@@ -121,6 +121,33 @@ const expandBtnList = ref([
     type: 'error'
   }
 ])
+
+const orderChange = (e: any) => {
+  const index = e.detail.index
+  switch (index) {
+    case 0:
+      console.log('待付款')
+      break;
+    case 1:
+      console.log('待发货')
+      break;
+    case 2:
+      console.log('待收货')
+      break;
+    case 3:
+      console.log('待评价')
+      break;
+    case 4:
+      console.log('售后')
+      break;
+    default:
+      break;
+  }
+}
+
+const showAllOrder = () => {
+  uni.navigateTo({url: '/pages/order/index'})
+}
 
 </script>
 

@@ -251,10 +251,16 @@ const openPopup = () => {
 
 const addToCart = () => {
   console.log('添加至购物车', selectedGoodsItem.value)
+  popup.value.close()
+  uni.showToast({
+    title: '已添加至购物车',
+    icon: "success"
+  })
 }
 
 const buyNow = () => {
   console.log('立即购买', selectedGoodsItem.value)
+  popup.value.close()
 }
 
 const resetSelected = () => {

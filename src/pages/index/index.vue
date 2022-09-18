@@ -22,7 +22,7 @@
   </view>
 
   <view>
-    <uni-grid :column="3" :showBorder="false">
+    <uni-grid :column="4" :showBorder="false">
       <uni-grid-item v-for="(item, index) in gridList" :key="index">
         <uni-icons :type="item.icon" :size="30" color="#777"/>
         <text class="text">{{ item.text }}</text>
@@ -97,6 +97,9 @@ const gridList = ref([
   }, {
     icon: 'phone',
     text: '家电'
+  }, {
+    icon: 'phone',
+    text: '更多'
   }
 ])
 

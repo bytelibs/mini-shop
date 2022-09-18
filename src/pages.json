@@ -50,40 +50,40 @@
     }
   ],
   "tabBar": {
-    "selectedColor": "#007aff",
-    "color": "#333",
+    "selectedColor": "#333",
+    "color": "#707070",
     "backgroundColor": "#fff",
     "borderStyle": "white",
     "height": "0px",
     "list": [
       {
         "pagePath": "pages/index/index",
-        "iconPath": "/static/home.png",
-        "selectedIconPath": "/static/home-fill.png",
+        "iconPath": "/static/tabbar/home.png",
+        "selectedIconPath": "/static/tabbar/home_fill.png",
         "text": "首页"
       },
       {
         "pagePath": "pages/category/index",
-        "iconPath": "/static/logo.png",
-        "selectedIconPath": "/static/logo.png",
+        "iconPath": "/static/tabbar/category.png",
+        "selectedIconPath": "/static/tabbar/category_fill.png",
         "text": "分类"
       },
       {
         "pagePath": "pages/message/index",
-        "iconPath": "/static/logo.png",
-        "selectedIconPath": "/static/logo.png",
+        "iconPath": "/static/tabbar/message.png",
+        "selectedIconPath": "/static/tabbar/message_fill.png",
         "text": "消息"
       },
       {
         "pagePath": "pages/cart/index",
-        "iconPath": "/static/logo.png",
-        "selectedIconPath": "/static/logo.png",
+        "iconPath": "/static/tabbar/cart.png",
+        "selectedIconPath": "/static/tabbar/cart_fill.png",
         "text": "购物车"
       },
       {
         "pagePath": "pages/profile/index",
-        "iconPath": "/static/logo.png",
-        "selectedIconPath": "/static/logo.png",
+        "iconPath": "/static/tabbar/profile.png",
+        "selectedIconPath": "/static/tabbar/profile_fill.png",
         "text": "我的"
       }
     ]

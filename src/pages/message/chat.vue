@@ -1,8 +1,45 @@
 <template>
 <view class="chat-container">
-  <view class="chat-content">
-
-  </view>
+  <!-- 聊天记录区域 -->
+  <scroll-view
+      class="chat-content"
+      scroll-y="true"
+      :scroll-into-view="scrollToView"
+      :scroll-with-animation="needScrollAnimation"
+      :style="{height: paddingBottom}">
+    <!-- 一条聊天记录  -->
+    <view class="chat-item" v-for="(item, index) in historyMsg" :key="item.id">
+      <!-- 时间  -->
+      <view class="time" v-if="item.showTime">{{handleTime(item.time)}}</view>
+      <!-- b - 对方的消息  -->
+      <view class="content-wrapper-left" v-if="item.fromId !== uid" >
+        <!-- 头像 -->
+        <image class="avatar avatar-left" :src="item.avatar"/>
+        <!-- 0 - 文字 -->
+        <view class="chat-content-left" v-if="item.type === 0">{{item.msg}}</view>
+        <!-- 1 - 图片 -->
+        <view class="chat-image-left" v-if="item.type === 1">......</view>
+        <!-- 2 - 语音 -->
+        <view class="chat-voice-left" v-if="item.type === 2">......</view>
+        <!-- 3 - 位置信息 -->
+        <view class="chat-site-left" v-if="item.type === 3">......</view>
+      </view>
+      <!--a - 自己的信息-->
+      <view class="content-wrapper-right" v-if="item.fromId === uid">
+        <!-- 0 - 文字 -->
+        <view class="chat-content-right" v-if="item.type === 0">{{item.msg}}</view>
+        <!-- 1 - 图片 -->
+        <view class="chat-image-right" v-if="item.type === 1">......</view>
+        <!-- 2 - 语音 -->
+        <view class="chat-voice-right" v-if="item.type === 2">......</view>
+        <!-- 3 - 位置信息 -->
+        <view class="chat-site chat-site-right" v-if="item.type === 3">......</view>
+        <!-- 头像 -->
+        <image class="avatar avatar-right" :src="item.avatar"/>
+      </view>
+    </view>
+  </scroll-view>
+  <!-- 底部操作区域 -->
   <view class="chat-input-bar" :style="inputBarBottomStyle">
     <view class="right-action">
       <uni-icons type="sound" size="30" @click="toggleMode"/>
@@ -80,10 +117,10 @@
   </view>
 </view>
   <!-- 语音遮罩层 -->
-  <view class="voice-mask" v-show="mask">
+  <view class="voice-mask" v-show="showMask">
     <!--语音条 -->
     <view class="voice-bar voice-del" :class="{voiceDel:needCancel}" :style={width:getVoiceBarWidth}>
-      <image src="../static/icon/wave.png" class="voice-volume" :class="{volumeDel:needCancel}"></image>
+<!--      <image src="../static/icon/wave.png" class="voice-volume" :class="{volumeDel:needCancel}"></image>-->
       <view class="trangle-bottom" :class="{trangleDel:needCancel}"></view>
     </view>
     <!-- 底部区域 -->
@@ -94,7 +131,7 @@
         <view class="voice-left-wrapper">
           <view class="cancel-del" :class="{delTip:needCancel}">松开 取消</view>
           <view class="voice-middle-inner close" :class="{bigger:needCancel}">
-            <image src="../static/icon/close-grey.png" class="close-icon"></image>
+<!--            <image src="../static/icon/close-grey.png" class="close-icon"></image>-->
           </view>
         </view>
         <!-- 转文字 -->
@@ -106,14 +143,16 @@
       </view>
       <!-- 底部语音按钮 -->
       <view class="mask-bottom">
-        <image src="../static/icon/voice-left.png"></image>
+<!--        <image src="../static/icon/voice-left.png"></image>-->
       </view>
     </view>
   </view>
 </template>
 
 <script lang="ts" setup>
-import {ref, onMounted} from "vue";
+import {ref, onMounted, nextTick} from "vue";
+const paddingBottom = ref('')
+const bottomHeight = ref(0)
 let systemInfo = {}
 
 onMounted(() => {
@@ -121,15 +160,198 @@ onMounted(() => {
     success: (res: UniApp.GetSystemInfoResult) => {
       console.log(res)
       systemInfo = res
+      // const height = getHeight('.chat-input-bar')
+      console.log(bottomHeight.value)
+      // paddingBottom.value = systemInfo.windowHeight - systemInfo.safeAreaInsets.bottom + 'px'
     }
   })
+  console.log('窗口高度', systemInfo.windowHeight)
+  console.log('底部高度', systemInfo.safeAreaInsets.bottom)
 })
+const uid = ref(0)
+const historyMsg = ref([
+  {
+    id: 1,
+    time: '2022-09-19 20:00:00',
+    fromId: 1,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '在吗？？？？'
+  }, {
+    id: 0,
+    time: '2022-09-19 20:00:00',
+    fromId: 0,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '不在！！！！'
+  }, {
+    id: 1,
+    time: '2022-09-19 20:00:00',
+    fromId: 1,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '在吗？？？？'
+  }, {
+    id: 0,
+    time: '2022-09-19 20:00:00',
+    fromId: 0,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '不在！！！！'
+  }, {
+    id: 1,
+    time: '2022-09-19 20:00:00',
+    fromId: 1,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '在吗？？？？'
+  }, {
+    id: 0,
+    time: '2022-09-19 20:00:00',
+    fromId: 0,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '不在！！！！'
+  }, {
+    id: 1,
+    time: '2022-09-19 20:00:00',
+    fromId: 1,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '在吗？？？？'
+  }, {
+    id: 0,
+    time: '2022-09-19 20:00:00',
+    fromId: 0,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '不在！！！！'
+  }, {
+    id: 1,
+    time: '2022-09-19 20:00:00',
+    fromId: 1,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '在吗？？？？'
+  }, {
+    id: 0,
+    time: '2022-09-19 20:00:00',
+    fromId: 0,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '不在！！！！'
+  }, {
+    id: 1,
+    time: '2022-09-19 20:00:00',
+    fromId: 1,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '在吗？？？？'
+  }, {
+    id: 0,
+    time: '2022-09-19 20:00:00',
+    fromId: 0,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '不在！！！！'
+  }, {
+    id: 1,
+    time: '2022-09-19 20:00:00',
+    fromId: 1,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '在吗？？？？'
+  }, {
+    id: 0,
+    time: '2022-09-19 20:00:00',
+    fromId: 0,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '不在！！！！'
+  }, {
+    id: 1,
+    time: '2022-09-19 20:00:00',
+    fromId: 1,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '在吗？？？？'
+  }, {
+    id: 0,
+    time: '2022-09-19 20:00:00',
+    fromId: 0,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '不在！！！！'
+  }, {
+    id: 1,
+    time: '2022-09-19 20:00:00',
+    fromId: 1,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '在吗？？？？'
+  }, {
+    id: 0,
+    time: '2022-09-19 20:00:00',
+    fromId: 0,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '不在！！！！'
+  }
+])
+
+const scrollToView = ref('')
+const scrollViewHeight = ref('')
+const statusBarHeight = ref(0)
+const needScrollAnimation = ref(true)
+
+
+const reverseMsg = ref([])
+
+// 弹出菜单栏修改scroll-view高度
+const handleHeightChange = (height: number) => {
+  scrollViewHeight.value = `calc(100vh - 208rpx - ${height}px - ${statusBarHeight}px)`;
+  scrollToView.value = '';
+  nextTick(() => {
+    scrollToView.value = 'msg' + historyMsg.value[historyMsg.value.length - 1].id;
+  })
+}
+
+// 获取指定选择器元素的高度
+const getHeight = (classNa: string) => {
+  return setTimeout(() => {
+    const query = uni.createSelectorQuery().in(this);
+    query.select(classNa).boundingClientRect(data => {
+      // this.$emit('heightChange', data.height);
+      return data.height
+    }).exec();
+  },10);
+}
+
 
 const mode = ref('input')
 const inputValue = ref('')
 const inputBarBottomStyle = ref('');
 const showExpandPanel = ref(false);
 const showEmojiPanel = ref(false);
+const showMask = ref(false)
 
 
 const recorderManager = uni.getRecorderManager();
@@ -150,6 +372,8 @@ const list = ref([
   }
 ])
 
+
+
 const toggleMode = () => {
   console.log('切换模式')
   showExpandPanel.value = false
@@ -163,6 +387,7 @@ const focusHandler = (e: any) => {
   showExpandPanel.value = false
   showEmojiPanel.value = false
   inputBarBottomStyle.value = 'bottom: ' + e.detail.height + 'px; padding-bottom: 20rpx;'
+  handleHeightChange(e.detail.height)
 }
 const blurHandler = () => {
   if (!showExpandPanel.value || !showEmojiPanel.value) {
@@ -190,6 +415,9 @@ const openEmojiPanel = () => {
   } else {
     inputBarBottomStyle.value = 'bottom: 0'
   }
+  bottomHeight.value = getHeight('.chat-input-bar')
+
+  // getHeight('.more-view');
 }
 
 const openExpandPanel = (type: string) => {
@@ -208,6 +436,8 @@ const openExpandPanel = (type: string) => {
   } else {
     inputBarBottomStyle.value = 'bottom: 0'
   }
+  bottomHeight.value = getHeight('.chat-input-bar')
+  // getHeight('.more-view');
 }
 
 const handleClickExpandBtn = (e: any) => {
@@ -297,11 +527,60 @@ const rpxToPx = (rpx: number) => {
 
 <style lang="scss" scoped>
 .chat-container {
-  height: 600rpx;
+  //height: 600rpx;
+  height: 100vh;
   .chat-content {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    .chat-item {
+      margin: 20rpx 20rpx;
+      /* 左侧信息 */
+      .content-wrapper-left {
+        //flex-direction: row;
+        display: flex;
+        text-align: left;
+        .avatar {
+          height: 75rpx;
+          width: 75rpx;
+          border-radius: 10rpx;
+          //flex: 1;
+          //flex: none;
+        }
+        .avatar-left {
+
+        }
+        .chat-content-left {
+          background-color: #FFFFFF;
+          border-radius: 10rpx;
+          padding: 15rpx 20rpx;
+          margin-left: 16rpx;
+        }
+      }
+
+      /* 右侧信息 */
+      .content-wrapper-right {
+        //flex: none;
+        justify-content: flex-end;
+        text-align: right;
+        display: flex;
+        //flex-direction: row-reverse;
+        .avatar {
+          height: 60rpx;
+          width: 60rpx;
+          border-radius: 10rpx;
+          //flex: none;
+        }
+        .avatar-right {
+
+        }
+        .chat-content-right {
+          background-color: #4cd964;
+          border-radius: 10rpx;
+          padding: 15rpx 20rpx;
+          margin-right: 16rpx;
+        }
+      }
+    }
   }
   .chat-input-bar {
     z-index: 1024;
@@ -310,6 +589,7 @@ const rpxToPx = (rpx: number) => {
     width: 100%;
     display: flex;
     position: fixed;
+    background-color: rgb(246, 246, 246);
     box-shadow: 0 -1rpx 6rpx rgba(0, 0, 0, 0.1);
     align-items: center;
     padding-bottom: constant(safe-area-inset-bottom);

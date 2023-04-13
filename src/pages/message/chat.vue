@@ -3,12 +3,12 @@
   <!-- 聊天记录区域 -->
   <scroll-view
       class="chat-content"
-      scroll-y="true"
+      :scroll-y="true"
       :scroll-into-view="scrollToView"
       :scroll-with-animation="needScrollAnimation"
       :style="{height: paddingBottom}">
     <!-- 一条聊天记录  -->
-    <view class="chat-item" v-for="(item, index) in historyMsg" :key="item.id">
+    <view class="chat-item" v-for="(item, index) in historyMsg" :id="'msg' + item.id" :key="item.id">
       <!-- 时间  -->
       <view class="time" v-if="item.showTime">{{handleTime(item.time)}}</view>
       <!-- b - 对方的消息  -->
@@ -53,6 +53,7 @@
           confirm-type="send"
           @focus="focusHandler"
           @blur="blurHandler"
+          @confirm="handleMsgSend"
           placeholder=""/>
       <button class="voice-btn"
               type="default"
@@ -117,57 +118,73 @@
   </view>
 </view>
   <!-- 语音遮罩层 -->
-  <view class="voice-mask" v-show="showMask">
-    <!--语音条 -->
-    <view class="voice-bar voice-del" :class="{voiceDel:needCancel}" :style={width:getVoiceBarWidth}>
-<!--      <image src="../static/icon/wave.png" class="voice-volume" :class="{volumeDel:needCancel}"></image>-->
-      <view class="trangle-bottom" :class="{trangleDel:needCancel}"></view>
-    </view>
-    <!-- 底部区域 -->
-    <view class="voice-send">
-      <!-- 取消和转文字图标 -->
-      <view class="voice-middle-wrapper">
-        <!-- 取消 -->
-        <view class="voice-left-wrapper">
-          <view class="cancel-del" :class="{delTip:needCancel}">松开 取消</view>
-          <view class="voice-middle-inner close" :class="{bigger:needCancel}">
-<!--            <image src="../static/icon/close-grey.png" class="close-icon"></image>-->
-          </view>
-        </view>
-        <!-- 转文字 -->
-        <view class="voice-middle-inner to-text">
-          <text class="wen">文</text>
-          <!-- <image src="" class="wen"></image> -->
-        </view>
-        <view class="send-tip" :class="{sendTipNone:needCancel}">松开 发送</view>
-      </view>
-      <!-- 底部语音按钮 -->
-      <view class="mask-bottom">
-<!--        <image src="../static/icon/voice-left.png"></image>-->
-      </view>
-    </view>
-  </view>
+<!--  <view class="voice-mask" v-show="showMask">-->
+<!--    &lt;!&ndash;语音条 &ndash;&gt;-->
+<!--    <view class="voice-bar voice-del" :class="{voiceDel:needCancel}" :style={width:getVoiceBarWidth}>-->
+<!--&lt;!&ndash;      <image src="../static/icon/wave.png" class="voice-volume" :class="{volumeDel:needCancel}"></image>&ndash;&gt;-->
+<!--      <view class="trangle-bottom" :class="{trangleDel:needCancel}"></view>-->
+<!--    </view>-->
+<!--    &lt;!&ndash; 底部区域 &ndash;&gt;-->
+<!--    <view class="voice-send">-->
+<!--      &lt;!&ndash; 取消和转文字图标 &ndash;&gt;-->
+<!--      <view class="voice-middle-wrapper">-->
+<!--        &lt;!&ndash; 取消 &ndash;&gt;-->
+<!--        <view class="voice-left-wrapper">-->
+<!--          <view class="cancel-del" :class="{delTip:needCancel}">松开 取消</view>-->
+<!--          <view class="voice-middle-inner close" :class="{bigger:needCancel}">-->
+<!--&lt;!&ndash;            <image src="../static/icon/close-grey.png" class="close-icon"></image>&ndash;&gt;-->
+<!--          </view>-->
+<!--        </view>-->
+<!--        &lt;!&ndash; 转文字 &ndash;&gt;-->
+<!--        <view class="voice-middle-inner to-text">-->
+<!--          <text class="wen">文</text>-->
+<!--          &lt;!&ndash; <image src="" class="wen"></image> &ndash;&gt;-->
+<!--        </view>-->
+<!--        <view class="send-tip" :class="{sendTipNone:needCancel}">松开 发送</view>-->
+<!--      </view>-->
+<!--      &lt;!&ndash; 底部语音按钮 &ndash;&gt;-->
+<!--      <view class="mask-bottom">-->
+<!--&lt;!&ndash;        <image src="../static/icon/voice-left.png"></image>&ndash;&gt;-->
+<!--      </view>-->
+<!--    </view>-->
+<!--  </view>-->
 </template>
 
 <script lang="ts" setup>
-import {ref, onMounted, nextTick} from "vue";
-const paddingBottom = ref('')
+import {ref, nextTick, getCurrentInstance} from "vue";
+import {onShow} from "@dcloudio/uni-app";
+const paddingBottom = ref('0')
 const bottomHeight = ref(0)
+const instance = getCurrentInstance()
 let systemInfo = {}
 
-onMounted(() => {
+onShow(() => {
+
   uni.getSystemInfo({
     success: (res: UniApp.GetSystemInfoResult) => {
       console.log(res)
       systemInfo = res
-      // const height = getHeight('.chat-input-bar')
-      console.log(bottomHeight.value)
-      // paddingBottom.value = systemInfo.windowHeight - systemInfo.safeAreaInsets.bottom + 'px'
+      getHeight('.chat-input-bar', 0)
+      // paddingBottom.value = systemInfo.windowHeight - 79 + 'px'
+    },
+    complete: () => {
+      console.log('窗口高度', systemInfo.windowHeight)
+      console.log('安全区高度', systemInfo.safeAreaInsets.bottom)
     }
   })
-  console.log('窗口高度', systemInfo.windowHeight)
-  console.log('底部高度', systemInfo.safeAreaInsets.bottom)
-})
+
+
+  nextTick(() => {
+    scrollToView.value = 'msg' + historyMsg.value[historyMsg.value.length - 1].id;
+
+  })
+
+
+});
+
+// onMounted(() => {
+//
+// })
 const uid = ref(0)
 const historyMsg = ref([
   {
@@ -179,7 +196,7 @@ const historyMsg = ref([
     showTime: false,
     msg: '在吗？？？？'
   }, {
-    id: 0,
+    id: 2,
     time: '2022-09-19 20:00:00',
     fromId: 0,
     type: 0,
@@ -187,7 +204,7 @@ const historyMsg = ref([
     showTime: false,
     msg: '不在！！！！'
   }, {
-    id: 1,
+    id: 3,
     time: '2022-09-19 20:00:00',
     fromId: 1,
     type: 0,
@@ -195,7 +212,7 @@ const historyMsg = ref([
     showTime: false,
     msg: '在吗？？？？'
   }, {
-    id: 0,
+    id: 4,
     time: '2022-09-19 20:00:00',
     fromId: 0,
     type: 0,
@@ -203,7 +220,7 @@ const historyMsg = ref([
     showTime: false,
     msg: '不在！！！！'
   }, {
-    id: 1,
+    id: 5,
     time: '2022-09-19 20:00:00',
     fromId: 1,
     type: 0,
@@ -211,7 +228,7 @@ const historyMsg = ref([
     showTime: false,
     msg: '在吗？？？？'
   }, {
-    id: 0,
+    id: 6,
     time: '2022-09-19 20:00:00',
     fromId: 0,
     type: 0,
@@ -219,7 +236,7 @@ const historyMsg = ref([
     showTime: false,
     msg: '不在！！！！'
   }, {
-    id: 1,
+    id: 7,
     time: '2022-09-19 20:00:00',
     fromId: 1,
     type: 0,
@@ -227,7 +244,7 @@ const historyMsg = ref([
     showTime: false,
     msg: '在吗？？？？'
   }, {
-    id: 0,
+    id: 8,
     time: '2022-09-19 20:00:00',
     fromId: 0,
     type: 0,
@@ -235,7 +252,7 @@ const historyMsg = ref([
     showTime: false,
     msg: '不在！！！！'
   }, {
-    id: 1,
+    id: 9,
     time: '2022-09-19 20:00:00',
     fromId: 1,
     type: 0,
@@ -243,7 +260,7 @@ const historyMsg = ref([
     showTime: false,
     msg: '在吗？？？？'
   }, {
-    id: 0,
+    id: 10,
     time: '2022-09-19 20:00:00',
     fromId: 0,
     type: 0,
@@ -251,7 +268,7 @@ const historyMsg = ref([
     showTime: false,
     msg: '不在！！！！'
   }, {
-    id: 1,
+    id: 11,
     time: '2022-09-19 20:00:00',
     fromId: 1,
     type: 0,
@@ -259,7 +276,7 @@ const historyMsg = ref([
     showTime: false,
     msg: '在吗？？？？'
   }, {
-    id: 0,
+    id: 12,
     time: '2022-09-19 20:00:00',
     fromId: 0,
     type: 0,
@@ -267,7 +284,7 @@ const historyMsg = ref([
     showTime: false,
     msg: '不在！！！！'
   }, {
-    id: 1,
+    id: 13,
     time: '2022-09-19 20:00:00',
     fromId: 1,
     type: 0,
@@ -275,7 +292,7 @@ const historyMsg = ref([
     showTime: false,
     msg: '在吗？？？？'
   }, {
-    id: 0,
+    id: 14,
     time: '2022-09-19 20:00:00',
     fromId: 0,
     type: 0,
@@ -283,7 +300,7 @@ const historyMsg = ref([
     showTime: false,
     msg: '不在！！！！'
   }, {
-    id: 1,
+    id: 15,
     time: '2022-09-19 20:00:00',
     fromId: 1,
     type: 0,
@@ -291,7 +308,7 @@ const historyMsg = ref([
     showTime: false,
     msg: '在吗？？？？'
   }, {
-    id: 0,
+    id: 16,
     time: '2022-09-19 20:00:00',
     fromId: 0,
     type: 0,
@@ -299,7 +316,7 @@ const historyMsg = ref([
     showTime: false,
     msg: '不在！！！！'
   }, {
-    id: 1,
+    id: 17,
     time: '2022-09-19 20:00:00',
     fromId: 1,
     type: 0,
@@ -307,7 +324,7 @@ const historyMsg = ref([
     showTime: false,
     msg: '在吗？？？？'
   }, {
-    id: 0,
+    id: 18,
     time: '2022-09-19 20:00:00',
     fromId: 0,
     type: 0,
@@ -319,30 +336,24 @@ const historyMsg = ref([
 
 const scrollToView = ref('')
 const scrollViewHeight = ref('')
-const statusBarHeight = ref(0)
+const statusBarHeight = ref(100)
 const needScrollAnimation = ref(true)
 
 
 const reverseMsg = ref([])
 
-// 弹出菜单栏修改scroll-view高度
-const handleHeightChange = (height: number) => {
-  scrollViewHeight.value = `calc(100vh - 208rpx - ${height}px - ${statusBarHeight}px)`;
-  scrollToView.value = '';
-  nextTick(() => {
-    scrollToView.value = 'msg' + historyMsg.value[historyMsg.value.length - 1].id;
-  })
-}
-
 // 获取指定选择器元素的高度
-const getHeight = (classNa: string) => {
-  return setTimeout(() => {
-    const query = uni.createSelectorQuery().in(this);
-    query.select(classNa).boundingClientRect(data => {
-      // this.$emit('heightChange', data.height);
-      return data.height
+const getHeight = async (className: string, expandHeight: number) => {
+  setTimeout(() => {
+    const query = uni.createSelectorQuery().in(instance);
+    query.select(className).boundingClientRect(data => {
+      console.log(`获取${className}的属性`, data)
+      console.log(`获取${className}的高度`, data.height)
+      // bottomHeight.value = data.height
+      handleHeightChange(data.height + expandHeight)
     }).exec();
   },10);
+  // console.log(`转换之后的高度`, bottomHeight.value)
 }
 
 
@@ -372,7 +383,18 @@ const list = ref([
   }
 ])
 
-
+// 弹出菜单栏修改scroll-view高度
+const handleHeightChange = (height: number) => {
+  console.log('弹出菜单栏修改scroll-view高度', height)
+  scrollViewHeight.value = `calc(100vh - 208rpx - ${height}px - ${statusBarHeight}px)`;
+  paddingBottom.value = systemInfo.windowHeight - height + 'px'
+  bottomHeight.value = height
+  scrollToView.value = '';
+  nextTick(() => {
+    scrollToView.value = 'msg' + historyMsg.value[historyMsg.value.length - 1].id;
+    console.log('scrollToView', scrollToView.value)
+  })
+}
 
 const toggleMode = () => {
   console.log('切换模式')
@@ -387,12 +409,28 @@ const focusHandler = (e: any) => {
   showExpandPanel.value = false
   showEmojiPanel.value = false
   inputBarBottomStyle.value = 'bottom: ' + e.detail.height + 'px; padding-bottom: 20rpx;'
-  handleHeightChange(e.detail.height)
+  // handleHeightChange(e.detail.height)
 }
 const blurHandler = () => {
   if (!showExpandPanel.value || !showEmojiPanel.value) {
     inputBarBottomStyle.value = 'bottom: 0'
   }
+}
+
+const handleMsgSend = () => {
+  console.log('发送消息')
+  historyMsg.value.push({
+    id: historyMsg.value.length,
+    time: '2022-09-19 20:00:00',
+    fromId: 1,
+    type: 0,
+    avatar: 'https://bytelibs-dev.oss-cn-beijing.aliyuncs.com/image/goods/goods_1.jpg',
+    showTime: false,
+    msg: '在吗？？？？'
+  })
+  nextTick(() => {
+    scrollToView.value = 'msg' + historyMsg.value[historyMsg.value.length - 1].id;
+  })
 }
 
 const containerClick = () => {
@@ -415,8 +453,9 @@ const openEmojiPanel = () => {
   } else {
     inputBarBottomStyle.value = 'bottom: 0'
   }
-  bottomHeight.value = getHeight('.chat-input-bar')
-
+  // getHeight('.chat-input-bar')
+  // console.log('打开扩展面板后', bottomHeight.value)
+  // handleHeightChange(bottomHeight.value)
   // getHeight('.more-view');
 }
 
@@ -436,8 +475,9 @@ const openExpandPanel = (type: string) => {
   } else {
     inputBarBottomStyle.value = 'bottom: 0'
   }
-  bottomHeight.value = getHeight('.chat-input-bar')
-  // getHeight('.more-view');
+  getHeight('.chat-input-bar', rpxToPx(350))
+  // console.log('打开扩展面板后', bottomHeight.value)
+  // handleHeightChange(bottomHeight.value)
 }
 
 const handleClickExpandBtn = (e: any) => {
@@ -533,7 +573,8 @@ const rpxToPx = (rpx: number) => {
     display: flex;
     flex-direction: column;
     .chat-item {
-      margin: 20rpx 20rpx;
+      //margin: 20rpx 20rpx;
+      padding: 20rpx;
       /* 左侧信息 */
       .content-wrapper-left {
         //flex-direction: row;
